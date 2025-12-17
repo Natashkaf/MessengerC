@@ -1,0 +1,259 @@
+<Window x:Class="MessengerApp.ProfileWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Профиль" 
+        Height="700" 
+        Width="900"
+        WindowStartupLocation="CenterOwner"
+        WindowStyle="SingleBorderWindow"
+        ResizeMode="NoResize">
+    
+    <Window.Resources>
+        <Style TargetType="TextBlock">
+            <Setter Property="Margin" Value="0,0,0,5"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+        </Style>
+        <Style TargetType="TextBox">
+            <Setter Property="Padding" Value="5"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+        </Style>
+        <Style TargetType="ComboBox">
+            <Setter Property="Padding" Value="5"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+        </Style>
+        <Style TargetType="CheckBox">
+            <Setter Property="Margin" Value="0,5"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+        </Style>
+        <Style TargetType="Button">
+            <Setter Property="Padding" Value="10,5"/>
+            <Setter Property="Margin" Value="5"/>
+            <Setter Property="MinWidth" Value="80"/>
+        </Style>
+        <Style x:Key="TabItemStyle" TargetType="TabItem">
+            <Setter Property="Padding" Value="15,8"/>
+            <Setter Property="FontSize" Value="14"/>
+        </Style>
+        <Style x:Key="SectionHeader" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Margin" Value="0,20,0,10"/>
+        </Style>
+    </Window.Resources>
+    
+    <Grid>
+        <TabControl Margin="10">
+            <!-- Основная информация -->
+            <TabItem Header="Основное" Style="{StaticResource TabItemStyle}">
+                <ScrollViewer>
+                    <StackPanel Margin="20" MaxWidth="600">
+                        <!-- Аватар -->
+                        <StackPanel Orientation="Horizontal" Margin="0,0,0,30">
+                            <Border Width="150" Height="150" CornerRadius="75" 
+                                    BorderBrush="LightGray" BorderThickness="2"
+                                    Background="#F0F0F0">
+                                <Image x:Name="AvatarImage" Stretch="UniformToFill">
+                                    <Image.Clip>
+                                        <EllipseGeometry Center="75,75" RadiusX="75" RadiusY="75"/>
+                                    </Image.Clip>
+                                </Image>
+                            </Border>
+                            <StackPanel Margin="20,0,0,0" VerticalAlignment="Center">
+                                <Button x:Name="ChangeAvatarButton" Content="Изменить аватар" 
+                                        Click="ChangeAvatarButton_Click" Width="150"/>
+                                <Button x:Name="RemoveAvatarButton" Content="Удалить аватар" 
+                                        Click="RemoveAvatarButton_Click" Margin="0,10,0,0"
+                                        Style="{StaticResource TransparentButtonStyle}" Width="150"/>
+                                <TextBlock Text="JPG, PNG, GIF до 5MB" 
+                                           Foreground="Gray" FontSize="11" Margin="0,5,0,0"/>
+                            </StackPanel>
+                        </StackPanel>
+                        
+                        <!-- Основные поля -->
+                        <TextBlock Text="Основная информация" Style="{StaticResource SectionHeader}"/>
+                        
+                        <Grid Margin="0,0,0,15">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="150"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            
+                            <TextBlock Grid.Row="0" Grid.Column="0" Text="Имя:"/>
+                            <TextBox Grid.Row="0" Grid.Column="1" x:Name="DisplayNameBox" 
+                                     Text="{Binding DisplayName, UpdateSourceTrigger=PropertyChanged}"/>
+                            <TextBlock Grid.Row="3" Grid.Column="0" Text="Статус:"/>
+                            <StackPanel Grid.Row="3" Grid.Column="1" Orientation="Horizontal">
+                                <ComboBox x:Name="StatusComboBox" Width="150" Margin="0,0,10,0"
+                                          SelectionChanged="StatusComboBox_SelectionChanged">
+                                    <ComboBoxItem Content="Онлайн" Tag="Online"/>
+                                    <ComboBoxItem Content="Отошел" Tag="Away"/>
+                                    <ComboBoxItem Content="Не беспокоить" Tag="DoNotDisturb"/>
+                                    <ComboBoxItem Content="Невидимый" Tag="Invisible"/>
+                                    <ComboBoxItem Content="Оффлайн" Tag="Offline"/>
+                                </ComboBox>
+                                <TextBox x:Name="StatusTextbox" Width="200" 
+                                         Text="{Binding StatusText, UpdateSourceTrigger=PropertyChanged}"
+                                         ToolTip="Текст статуса (необязательно)"/>
+                            </StackPanel>
+                        </Grid>
+                        
+                        <!-- Описание -->
+                        <TextBlock Text="О себе" Style="{StaticResource SectionHeader}"/>
+                        <TextBox x:Name="BioTextBox" Height="80" TextWrapping="Wrap" AcceptsReturn="True"
+                                 Text="{Binding Bio, UpdateSourceTrigger=PropertyChanged}"
+                                 VerticalScrollBarVisibility="Auto"/>
+                        <TextBlock x:Name="BioCounter" Text="0/500" HorizontalAlignment="Right" 
+                                   Foreground="Gray" FontSize="11" Margin="0,5,0,0"/>
+                    </StackPanel>
+                </ScrollViewer>
+            </TabItem>
+            
+            <!-- Настройки приватности -->
+            <TabItem Header="Приватность" Style="{StaticResource TabItemStyle}">
+                <ScrollViewer>
+                    <StackPanel Margin="20" MaxWidth="600">
+                        <TextBlock Text="Кто может видеть..." Style="{StaticResource SectionHeader}"/>
+                        
+                        <Grid Margin="0,0,0,10">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="150"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            
+                            <TextBlock Grid.Row="0" Grid.Column="0" Text="Время последнего посещения:"/>
+                            <ComboBox Grid.Row="0" Grid.Column="1" x:Name="LastSeenCombo">
+                                <ComboBoxItem Content="Все"/>
+                                <ComboBoxItem Content="Только контакты"/>
+                                <ComboBoxItem Content="Никто"/>
+                            </ComboBox>
+                            
+                            <TextBlock Grid.Row="1" Grid.Column="0" Text="Фото профиля:" Margin="0,10,0,0"/>
+                            <ComboBox Grid.Row="1" Grid.Column="1" x:Name="PhotoVisibilityCombo" Margin="0,10,0,0">
+                                <ComboBoxItem Content="Все"/>
+                                <ComboBoxItem Content="Только контакты"/>
+                                <ComboBoxItem Content="Никто"/>
+                            </ComboBox>
+                            
+                            <TextBlock Grid.Row="2" Grid.Column="0" Text="Приглашения в группы:" Margin="0,10,0,0"/>
+                            <ComboBox Grid.Row="2" Grid.Column="1" x:Name="GroupInviteCombo" Margin="0,10,0,0">
+                                <ComboBoxItem Content="Все"/>
+                                <ComboBoxItem Content="Только контакты"/>
+                                <ComboBoxItem Content="Никто"/>
+                            </ComboBox>
+                            
+                            <TextBlock Grid.Row="3" Grid.Column="0" Text="Пересылка сообщений:" Margin="0,10,0,0"/>
+                            <CheckBox Grid.Row="3" Grid.Column="1" x:Name="ForwardMessagesCheck" 
+                                      Margin="0,10,0,0" HorizontalAlignment="Left"/>
+                        </Grid>
+                    </StackPanel>
+                </ScrollViewer>
+            </TabItem>
+            
+            <!-- Настройки уведомлений -->
+            <TabItem Header="Уведомления" Style="{StaticResource TabItemStyle}">
+                <ScrollViewer>
+                    <StackPanel Margin="20" MaxWidth="600">
+                        <TextBlock Text="Настройки уведомлений" Style="{StaticResource SectionHeader}"/>
+                        
+                        <CheckBox x:Name="EnableNotificationsCheck" Content="Включить уведомления" 
+                                  IsChecked="{Binding NotificationSettings.EnableNotifications}"/>
+                        <CheckBox x:Name="EnableSoundsCheck" Content="Звуковые уведомления" Margin="0,5,0,0"
+                                  IsChecked="{Binding NotificationSettings.EnableSounds}"/>
+                        <CheckBox x:Name="EnableVibrationsCheck" Content="Вибрация" Margin="0,5,0,0"
+                                  IsChecked="{Binding NotificationSettings.EnableVibrations}"/>
+                        <CheckBox x:Name="ShowPreviewCheck" Content="Показывать текст сообщения" Margin="0,5,0,0"
+                                  IsChecked="{Binding NotificationSettings.ShowPreview}"/>
+                        <CheckBox x:Name="IgnoreMentionsCheck" Content="Игнорировать упоминания" Margin="0,5,0,0"
+                                  IsChecked="{Binding NotificationSettings.IgnoreMentions}"/>
+                        
+                        <StackPanel Orientation="Horizontal" Margin="0,15,0,0">
+                            <TextBlock Text="Звук уведомления:" VerticalAlignment="Center"/>
+                            <ComboBox x:Name="SoundComboBox" Margin="10,0,0,0" Width="150">
+                                <ComboBoxItem Content="По умолчанию"/>
+                                <ComboBoxItem Content="Звонок 1"/>
+                                <ComboBoxItem Content="Звонок 2"/>
+                                <ComboBoxItem Content="Вибрация"/>
+                                <ComboBoxItem Content="Без звука"/>
+                            </ComboBox>
+                        </StackPanel>
+                        
+                        <StackPanel Orientation="Horizontal" Margin="0,15,0,0">
+                            <TextBlock Text="Заглушить до:" VerticalAlignment="Center"/>
+                            <DatePicker x:Name="MuteUntilDate" Margin="10,0,10,0" Width="120"/>
+                            <ComboBox x:Name="MuteUntilTime" Width="80">
+                                <ComboBoxItem Content="01:00"/>
+                                <ComboBoxItem Content="06:00"/>
+                                <ComboBoxItem Content="08:00"/>
+                                <ComboBoxItem Content="Завтра 08:00"/>
+                            </ComboBox>
+                        </StackPanel>
+                    </StackPanel>
+                </ScrollViewer>
+            </TabItem>
+            
+            <!-- Настройки аккаунта -->
+            <TabItem Header="Аккаунт" Style="{StaticResource TabItemStyle}">
+                <ScrollViewer>
+                    <StackPanel Margin="20" MaxWidth="600">
+                        
+                        <TextBlock Text="Другие настройки" Style="{StaticResource SectionHeader}" Margin="0,30,0,0"/>
+                        
+                        <CheckBox x:Name="EmailNotificationsCheck" Content="Email уведомления"
+                                  IsChecked="{Binding AccountSettings.EmailNotifications}"/>
+                        <CheckBox x:Name="TwoFactorAuthCheck" Content="Двухфакторная аутентификация" Margin="0,5,0,0"
+                                  IsChecked="{Binding AccountSettings.TwoFactorAuth}"/>
+                        <CheckBox x:Name="LoginNotificationsCheck" Content="Уведомления о входе" Margin="0,5,0,0"
+                                  IsChecked="{Binding AccountSettings.LoginNotifications}"/>
+                        
+                        <StackPanel Orientation="Horizontal" Margin="0,15,0,0">
+                            <TextBlock Text="Таймаут сессии:" VerticalAlignment="Center"/>
+                            <ComboBox x:Name="SessionTimeoutCombo" Margin="10,0,0,0" Width="100">
+                                <ComboBoxItem Content="15 мин"/>
+                                <ComboBoxItem Content="30 мин"/>
+                                <ComboBoxItem Content="1 час"/>
+                                <ComboBoxItem Content="4 часа"/>
+                                <ComboBoxItem Content="1 день"/>
+                            </ComboBox>
+                        </StackPanel>
+                        
+                        <StackPanel Orientation="Horizontal" Margin="0,30,0,0">
+                            <Button x:Name="ExportDataButton" Content="Экспорт данных" 
+                                    Click="ExportDataButton_Click"/>
+                            <Button x:Name="DeleteAccountButton" Content="Удалить аккаунт" 
+                                    Click="DeleteAccountButton_Click" Background="#FF4444" Foreground="White"
+                                    Margin="10,0,0,0"/>
+                        </StackPanel>
+                    </StackPanel>
+                </ScrollViewer>
+            </TabItem>
+        </TabControl>
+        
+        <!-- Кнопки сохранения/отмены -->
+        <Border Background="White" BorderBrush="#E0E0E0" BorderThickness="0,1,0,0" 
+                VerticalAlignment="Bottom" Height="70">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="10">
+                <Button x:Name="CancelButton" Content="Отмена" Width="100" Click="CancelButton_Click"/>
+                <Button x:Name="SaveButton" Content="Сохранить" Width="100" Background="#0078D4" 
+                        Foreground="White" Margin="10,0,0,0" Click="SaveButton_Click"/>
+                <TextBlock x:Name="StatusText" 
+                           TextAlignment="Center" 
+                           Foreground="Gray" 
+                           Margin="0,5,0,0"
+                           FontSize="12"/>
+            </StackPanel>
+        </Border>
+    </Grid>
+    
+</Window>

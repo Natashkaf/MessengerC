@@ -1,0 +1,43 @@
+<Window x:Class="MessengerApp.GoogleAuthWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Google Authorization" 
+        Height="250" 
+        Width="400"
+        WindowStartupLocation="CenterOwner"
+        WindowStyle="SingleBorderWindow"
+        ResizeMode="NoResize">
+    
+    <Grid>
+        <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+            <ProgressBar IsIndeterminate="True" Width="200" Height="20" Margin="0,0,0,20"/>
+            <TextBlock Text="Ожидание авторизации в браузере..." 
+                       HorizontalAlignment="Center"
+                       TextAlignment="Center"
+                       Margin="0,0,0,20"/>
+            
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                <Button x:Name="CancelButton" 
+                        Content="Отмена" 
+                        Padding="15,8"
+                        Margin="0,0,10,0"
+                        Click="CancelButton_Click"/>
+                
+                <Button x:Name="RetryButton" 
+                        Content="Открыть браузер снова" 
+                        Padding="15,8"
+                        Click="RetryButton_Click"/>
+            </StackPanel>
+            
+            <TextBlock x:Name="StatusText" 
+                       Text="Если браузер не открылся автоматически, нажмите кнопку выше" 
+                       HorizontalAlignment="Center"
+                       TextAlignment="Center"
+                       TextWrapping="Wrap"
+                       Margin="0,20,0,0"
+                       Foreground="Gray"
+                       FontSize="11"
+                       Width="300"/>
+        </StackPanel>
+    </Grid>
+</Window>
